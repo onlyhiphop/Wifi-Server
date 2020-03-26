@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wifi.server.module.dao.MacDsNightDao">
+
+    <sql id="columns">
+        a.id AS "id",
+        a.mac AS "mac",
+        a.night_time AS "nightTime",
+        a.ds_count AS "dsCount",
+        a.deal_date as "dealDate",
+        sm.student_name as "studentName"
+    </sql>
+
+    <sql id="joins">
+        left join student_mac sm on a.mac = sm.mac
+    </sql>
+
+    <select id="findList" resultType="MacDsNight">
+        select
+        <include refid="columns"></include>
+        from mac_ds_night a
+        <include refid="joins"></include>
+        <where>
+            <if test="dealDate != null and dealDate != ''">
+                a.deal_date = #{dealDate}
+            </if>
+            <if test="studentMac.studentId != null and studentMac.studentId != ''">
+                and sm.student_id = #{studentMac.studentId}
+            </if>
+        </where>
+    </select>
+
+<!--    局部：年-->
+    <select id="findLocalList" resultType="MacDsNight">
+        select
+            a.night_time AS "nightTime",
+            sum(a.ds_count) AS "dsCount",
+            sm.student_name as "studentName"
+        from mac_ds_night a
+        <include refid="joins"></include>
+        <where>
+            <if test="dealDate != null and dealDate != ''">
+                substring(a.deal_date, 1, 2) = #{dealDate}
+            </if>
+            <if test="studentMac.studentId != null and studentMac.studentId != ''">
+                and sm.student_id = #{studentMac.studentId}
+            </if>
+        </where>
+        group by a.night_time
+    </select>
+</mapper>

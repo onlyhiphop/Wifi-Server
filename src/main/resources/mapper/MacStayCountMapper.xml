@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wifi.server.module.dao.MacStayCountDao">
+
+    <sql id="columns">
+        a.id AS "id",
+        a.mac AS "mac",
+        a.wid AS "wid",
+        a.deal_date AS "dealDate",
+        a.come_count AS "comeCount",
+        a.create_date AS "createDate",
+        wi.place_name as "wifiInfo.placeName",
+        sm.student_name as "studentName"
+    </sql>
+
+    <sql id="joins">
+        left join wifi_info wi on wi.wid = a.wid
+        left join student_mac sm on a.mac = sm.mac
+    </sql>
+
+    <select id="findList" resultType="MacStayCount">
+        select
+        <include refid="columns"></include>
+        from mac_stay_count a
+        <include refid="joins"></include>
+        <where>
+            <if test="dealDate != null and dealDate != ''">
+                a.deal_date = #{dealDate}
+            </if>
+            <if test="wid != null and wid !=''">
+                and a.wid = #{wid}
+            </if>
+            <if test="mac != null and mac != ''">
+                and a.mac = #{mac}
+            </if>
+            <if test="studentMac.studentName != null and studentMac.studentName != ''">
+                and sm.student_name = #{studentMac.studentName}
+            </if>
+            <if test="studentMac.classId != null  and studentMac.classId != ''">
+                and sm.class_id = #{studentMac.classId}
+            </if>
+            <if test="studentMac.studentId != null and studentMac.studentId != ''">
+                and sm.student_id = #{studentMac.studentId}
+            </if>
+        </where>
+    </select>
+
+<!--    查询某个地点的平均值-->
+    <select id="findAverage" resultType="MacStayCount">
+        select
+            a.place_name as "wifiInfo.placeName",
+            count(*) as "numberPeople",
+            sum(a.comeCount) / count(*) as "average"
+        from
+        (
+        SELECT
+            a.wid,
+            a.mac,
+            sum(come_count) as "comeCount",
+            wi.place_name
+        from mac_stay_count a
+        JOIN (
+            SELECT
+                mac AS "mac"
+            FROM
+                student_mac
+            <where>
+                <if test="grade eq 'clas'">
+                    class_id = ( SELECT class_id FROM student_mac WHERE student_id = #{studentId})
+                </if>
+                <if test="grade eq 'faculty'">
+                    and faculty_id = ( SELECT faculty_id FROM student_mac WHERE student_id = #{studentId})
+                </if>
+            </where>
+            GROUP BY mac
+            ) si ON si.mac = a.mac
+        LEFT JOIN wifi_info wi on wi.wid = a.wid
+        <where>
+            <if test="wid != null and wid !=''">
+                a.wid = #{wid}
+            </if>
+            <if test="dealDate != null and dealDate !=''">
+                and a.deal_date = #{dealDate}
+            </if>
+        </where>
+        GROUP BY mac,wid
+        ) a
+    </select>
+
+<!--    查询所有地点的班级平均值-->
+    <select id="findAllAverage" resultType="MacStayCount">
+        SELECT
+            a.wid,
+            wi.place_name as "wifiInfo.placeName",
+            ct.numberPeople,
+            sum(a.come_count) / ct.numberPeople AS "average"
+        from mac_stay_count a
+        JOIN (
+            SELECT
+                mac AS "mac"
+            FROM
+                student_mac
+            WHERE
+                class_id = ( SELECT class_id FROM student_mac WHERE student_id = #{studentId} )
+            GROUP BY
+                mac
+            ) si ON si.mac = a.mac
+        LEFT JOIN wifi_info wi on wi.wid = a.wid
+        LEFT JOIN (select count(*) as "numberPeople" from student_mac WHERE class_id = (SELECT class_id FROM student_mac WHERE student_id = #{studentId})) ct on 1=1
+        where a.deal_date = #{dealDate}
+        GROUP BY a.wid
+    </select>
+
+<!--    查询全年-->
+    <select id="findYearList" resultType="MacStayCount">
+        SELECT
+            a.wid,
+            sum( a.come_count ) AS "comeCount",
+            a.deal_date AS "dealDate",
+            substring(a.deal_date, 6, 2) as "month",
+            wi.place_name AS "wifiInfo.placeName"
+        FROM
+            mac_stay_count a
+            LEFT JOIN wifi_info wi ON wi.wid = a.wid
+            LEFT JOIN student_mac sm ON a.mac = sm.mac
+        WHERE
+            sm.student_id = #{studentId} and substring(a.deal_date, 1,4) = #{year}
+        GROUP BY
+            a.wid,a.deal_date
+        ORDER BY a.deal_date
+    </select>
+</mapper>

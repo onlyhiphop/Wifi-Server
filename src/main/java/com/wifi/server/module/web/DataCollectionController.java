@@ -46,9 +46,4 @@ public class DataCollectionController {
         return "ok";
     }
 
-    @RequestMapping(value = "dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
-
 }

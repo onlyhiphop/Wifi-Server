@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://39.108.230.146:3306/hwjl?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://39.108.230.146:3306/wifi?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: Forever522.
     druid:
@@ -9,11 +9,23 @@ spring:
       max-active:  10
       web-stat-filter:
         exclusions:  "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"  #不统计这些请求数据
+  jackson:  # 解决接口出现实体类字段为null
+    default-property-inclusion: non_null
+    date-format: yyyy-MM-dd HH:mm:ss
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+    static-path-pattern: /static/**
 
 logging:
   config: classpath:logback-spring.xml
   level:
-    dao: debug
+    com:
+      wifi:
+        server:
+          module:
+            dao: debug
     org:
       mybatis: debug
   file:
@@ -22,3 +34,4 @@ logging:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.wifi.server.module.entity

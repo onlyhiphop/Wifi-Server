@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wifi.server.module.dao.StudentMacDao">
+
+    <sql id="columns">
+        a.id AS "id",
+        a.faculty_id AS "facultyId",
+        a.class_id AS "classId",
+        a.student_id AS "studentId",
+        a.student_name AS "studentName",
+        a.mac as "mac",
+        a.del_flag as "delFlag"
+    </sql>
+
+    <sql id="joins">
+    </sql>
+
+    <select id="findList" resultType="MacStayCount">
+        select
+        <include refid="columns"></include>
+        from student_mac a
+        <include refid="joins"></include>
+        <where>
+            <if test="studentId != null and studentId != ''">
+                a.student_id = #{studentId}
+            </if>
+            <if test="classId != null and classId !=''">
+                and a.class_id = #{classId}
+            </if>
+            <if test="facultyId != null and facultyId != ''">
+                and a.faculty_id = #{mac}
+            </if>
+        </where>
+    </select>
+
+</mapper>
