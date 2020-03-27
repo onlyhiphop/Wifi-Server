@@ -30,4 +30,11 @@ public class MacStayTimeService {
     public List<MacStayTime> findAllAverage(String studentId, String dealDate){
         return dao.findAllAverage(studentId,dealDate);
     }
+
+    /**
+     * 查询某年各月数据
+     */
+    public List<MacStayTime> findYearList(String studentId, String year){
+        return dao.findYearList(studentId, year);
+    }
 }

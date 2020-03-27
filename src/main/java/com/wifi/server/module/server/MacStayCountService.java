@@ -31,6 +31,9 @@ public class MacStayCountService {
         return dao.findAllAverage(studentId,dealDate);
     }
 
+    /**
+     * 查询某年各月数据
+     */
     public List<MacStayCount> findYearList(String studentId,String year){
         return dao.findYearList(studentId, year);
     }

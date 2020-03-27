@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -205,10 +206,19 @@ public class DataShowController {
      * @param searchCondition
      * @return
      */
+    @RequestMapping(value = "/allMonth")
     public AjaxResult allMonth(SearchCondition searchCondition){
         String year = searchCondition.getYear();
         String sid = searchCondition.getSid();
+        //次数
         List<MacStayCount> yearCountList = countService.findYearList(sid, year);
+        Map<String, List<String>> countMonthMapList = MyUtil.getCountMonthMapList(yearCountList);
 
+        //时间
+        List<MacStayTime> yearTimeList = stayTimeService.findYearList(sid,year);
+        Map<String, List<String>> timeMonthMapList = MyUtil.getTimeMonthMapList(yearTimeList);
+
+        Dict result = Dict.create().set("count", countMonthMapList).set("time", timeMonthMapList);
+        return AjaxResult.success(result);
     }
 }

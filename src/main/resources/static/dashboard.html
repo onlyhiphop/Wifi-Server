@@ -431,7 +431,7 @@
 											<form id="allMonthForm" class="navbar-form navbar-left" style="margin-top: -20px;margin-bottom: 0px;" role="search">
 												<div class="form-group  is-empty">
 													学号：
-													<input name="sid" type="text" class="form-control" placeholder="请输入学生学号...">
+													<input name="sid" type="text" class="form-control required" placeholder="请输入学生学号...">
 													<span class="material-input"></span>
 												</div>
 												<div class="form-group  is-empty">
@@ -452,7 +452,7 @@
 													<div class="ct-chart" id="allMonthChartDiv"></div>
 												</div>
 												<div class="card-content">
-													<h4 class="title">xxxx年的数据对比</h4>
+													<h4 class="title"><span id="selectYear"></span>年的各月数据对比</h4>
 												</div>
 											</div>
 										</div>
@@ -721,7 +721,9 @@
 						}
 						var data = res.data;
 						var dsLine = pervDraw('allMonthChartDiv');
+						
 						drawChart.initTowLine(dsLine,data);
+						$('#selectYear').text(year);
 					}
 				});
 

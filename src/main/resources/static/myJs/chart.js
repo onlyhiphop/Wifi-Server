@@ -148,7 +148,7 @@ var drawChart = {
     },
 
     // 画一个双折线图
-    initTowLine: function(element){
+    initTowLine: function(element, data){
         var myChart = echarts.init(element);
         var option = {
             title: {
@@ -184,7 +184,7 @@ var drawChart = {
                     name: '访问次数',
                     type: 'line',
                     stack: '总量',
-                    data: [120, 132, 101, 134, 90, 230, 210]
+                    data: data.count
                 },
                 {
                     name: '班级平均访问次数',
@@ -196,7 +196,7 @@ var drawChart = {
                     name: '访问时间',
                     type: 'line',
                     stack: '总量',
-                    data: [150, 232, 201, 154, 190, 330, 410]
+                    data: data.time
                 },
                 {
                     name: '班级平均访问时间',

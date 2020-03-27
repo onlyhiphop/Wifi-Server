@@ -110,4 +110,23 @@
         where a.deal_date = #{dealDate}
         GROUP BY a.wid
     </select>
+
+    <!--    查询全年-->
+    <select id="findYearList" resultType="MacStayTime">
+        SELECT
+            a.wid,
+            sum( a.stay_duration ) AS "stayDuration",
+            a.deal_date AS "dealDate",
+            substring(a.deal_date, 6, 2) as "month",
+            wi.place_name AS "wifiInfo.placeName"
+        FROM
+            mac_stay_time a
+            LEFT JOIN wifi_info wi ON wi.wid = a.wid
+            LEFT JOIN student_mac sm ON a.mac = sm.mac
+        WHERE
+            sm.student_id = #{studentId} and substring(a.deal_date, 1,4) = #{year}
+        GROUP BY
+            a.wid,a.deal_date
+        ORDER BY a.deal_date
+    </select>
 </mapper>

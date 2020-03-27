@@ -1,10 +1,10 @@
 package com.wifi.server.common.utils;
-import java.util.ArrayList;
+import java.util.*;
 
 import cn.hutool.core.collection.CollUtil;
 import com.wifi.server.module.entity.MacDsNight;
-
-import java.util.List;
+import com.wifi.server.module.entity.MacStayCount;
+import com.wifi.server.module.entity.MacStayTime;
 
 /**
  * 自定义的工具类
@@ -40,5 +40,79 @@ public class MyUtil {
         return CollUtil.newArrayList(sortNight);
     }
 
+    /**
+     * 提取count全年十二个月的数据
+     */
+    public static Map<String, List<String>> getCountMonthMapList(List<MacStayCount> lists){
+        Map<String, ArrayList<MacStayCount>> map = new HashMap<>();
+        for (MacStayCount c:
+                lists) {
+            String placeName = c.getWifiInfo().getPlaceName();
+            map.put("placeName", new ArrayList<MacStayCount> ());
+        }
+        for (MacStayCount c :
+                lists) {
+            ArrayList<MacStayCount> macStayCounts = map.get(c.getWifiInfo().getPlaceName());
+            macStayCounts.add(c);
+        }
+        Map<String, List<String>> resultMonth = new HashMap<>();
+        Set<String> keySet = map.keySet();
+        for (String k:
+             keySet) {
+            resultMonth.put(k, getCountMonthData(map.get(k)));
+        }
+        return resultMonth;
+    }
+
+
+    public static List<String> getCountMonthData(List<MacStayCount> lists){
+        String[] sortMonth = new String[12];
+        for(int i = 0; i < 12; i++){
+            sortMonth[i] = "0";
+        }
+        for (MacStayCount count :
+                lists) {
+            sortMonth[Integer.parseInt(count.getMonth())] = count.getComeCount();
+        }
+        return CollUtil.newArrayList(sortMonth);
+    }
+
+
+    /**
+     * 提取全年十二个月的数据
+     */
+    public static Map<String, List<String>> getTimeMonthMapList(List<MacStayTime> lists){
+        Map<String, ArrayList<MacStayTime>> map = new HashMap<>();
+        for (MacStayTime c:
+                lists) {
+            String placeName = c.getWifiInfo().getPlaceName();
+            map.put("placeName", new ArrayList<MacStayTime> ());
+        }
+        for (MacStayTime c :
+                lists) {
+            ArrayList<MacStayTime> macStayCounts = map.get(c.getWifiInfo().getPlaceName());
+            macStayCounts.add(c);
+        }
+        Map<String, List<String>> resultMonth = new HashMap<>();
+        Set<String> keySet = map.keySet();
+        for (String k:
+                keySet) {
+            resultMonth.put(k, getTimeMonthData(map.get(k)));
+        }
+        return resultMonth;
+    }
+
+
+    public static List<String> getTimeMonthData(List<MacStayTime> lists){
+        String[] sortMonth = new String[12];
+        for(int i = 0; i < 12; i++){
+            sortMonth[i] = "0";
+        }
+        for (MacStayTime t :
+                lists) {
+            sortMonth[Integer.parseInt(t.getMonth())] = t.getStayDuration();
+        }
+        return CollUtil.newArrayList(sortMonth);
+    }
 
 }

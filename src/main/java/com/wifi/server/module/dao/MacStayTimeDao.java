@@ -19,4 +19,10 @@ public interface MacStayTimeDao {
      * 查询班级 所有地点的平均值
      */
     List<MacStayTime> findAllAverage(@Param("studentId")String studentId, @Param("dealDate")String dealDate);
+
+    /**
+     * 查询某年各月数据
+     */
+    List<MacStayTime> findYearList(@Param("studentId")String studentId,@Param("year")String year);
+
 }
