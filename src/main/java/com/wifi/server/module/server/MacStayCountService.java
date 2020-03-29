@@ -34,7 +34,14 @@ public class MacStayCountService {
     /**
      * 查询某年各月数据
      */
-    public List<MacStayCount> findYearList(String studentId,String year){
-        return dao.findYearList(studentId, year);
+    public List<MacStayCount> findYearList(String studentId,String year, String wid){
+        return dao.findYearList(studentId, year, wid);
+    }
+
+    /**
+     * 查询某年某地点各月的平均值
+     */
+    public List<MacStayCount> findWidYearAverage(String studentId,String year, String wid){
+        return dao.findWidYearAverage(studentId, year, wid);
     }
 }

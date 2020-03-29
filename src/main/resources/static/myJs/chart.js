@@ -149,6 +149,7 @@ var drawChart = {
 
     // 画一个双折线图
     initTowLine: function(element, data){
+        console.log(data);
         var myChart = echarts.init(element);
         var option = {
             title: {
@@ -184,25 +185,37 @@ var drawChart = {
                     name: '访问次数',
                     type: 'line',
                     stack: '总量',
-                    data: data.count
+                    data: data.count,
+                    itemStyle: {
+                        color: '#f50202'
+                    }
                 },
                 {
                     name: '班级平均访问次数',
                     type: 'line',
                     stack: '总量',
-                    data: [220, 182, 191, 234, 290, 330, 310]
+                    data: data.countAverage,
+                    itemStyle: {
+                        color: '#33c70e'
+                    }
                 },
                 {
                     name: '访问时间',
                     type: 'line',
                     stack: '总量',
-                    data: data.time
+                    data: data.time,
+                    itemStyle: {
+                        color: '#f50202'
+                    }
                 },
                 {
                     name: '班级平均访问时间',
                     type: 'line',
                     stack: '总量',
-                    data: [320, 332, 301, 334, 390, 330, 320]
+                    data: data.timeAverage,
+                    itemStyle: {
+                        color: '#33c70e'
+                    }
                 }
             ]
         };
@@ -311,9 +324,6 @@ var drawChart = {
         var option = {
             baseOption: {
                 title:{
-                    text: "区域人群实时密度监控--花城广场",
-                    link: 'http://blog.csdn.net/yc_1993',
-                    subtext: "数据模拟,仅为测试",
                     left: 'center',
                     top: 20,
                     textStyle:{
@@ -342,10 +352,10 @@ var drawChart = {
                     }
                 },
                 bmap: {
-                center: [113.331788,23.124235],
-                zoom: 16,
-                roam: true,
-                mapStyle: {
+                    center: [116.358359,27.99347],
+                    zoom: 18,
+                    roam: true,
+                    mapStyle: {
                                 styleJson: [
                     {
                             'featureType': 'land',     //调整土地颜色

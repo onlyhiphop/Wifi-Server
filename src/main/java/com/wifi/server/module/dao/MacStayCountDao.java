@@ -20,7 +20,12 @@ public interface MacStayCountDao {
     List<MacStayCount> findAllAverage(@Param("studentId")String studentId,@Param("dealDate")String dealDate);
 
     /**
-     * 查询某年各月数据
+     * 查询某年某地点各月数据
      */
-    List<MacStayCount> findYearList(@Param("studentId")String studentId,@Param("year")String year);
+    List<MacStayCount> findYearList(@Param("studentId")String studentId,@Param("year")String year,@Param("wid")String wid);
+
+    /**
+     * 查询某年某地点各月的平均值
+     */
+    List<MacStayCount> findWidYearAverage(@Param("studentId")String studentId,@Param("year")String year,@Param("wid")String wid);
 }

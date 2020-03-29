@@ -125,8 +125,45 @@
             LEFT JOIN student_mac sm ON a.mac = sm.mac
         WHERE
             sm.student_id = #{studentId} and substring(a.deal_date, 1,4) = #{year}
+            AND a.wid = #{wid}
         GROUP BY
             a.wid,a.deal_date
         ORDER BY a.deal_date
     </select>
+
+    <!--查询全年某个地点平均值-->
+    <select id="findWidYearAverage" resultType="MacStayTime">
+        select
+            a.deal_date AS "dealDate",
+            substring(a.deal_date, 6, 2) as "month",
+            a.place_name as "wifiInfo.placeName",
+            count(*) as "numberPeople",
+            sum(a.stayDuration) / count(*) as "average"
+        from
+        (
+            SELECT
+                a.wid,
+                a.mac,
+                a.deal_date,
+                sum(stay_duration) as "stayDuration",
+                wi.place_name
+            from mac_stay_time a
+            JOIN (
+                SELECT
+                mac AS "mac"
+                FROM
+                student_mac
+                where
+                class_id = ( SELECT class_id FROM student_mac WHERE student_id = #{studentId})
+                GROUP BY mac
+            ) si ON si.mac = a.mac
+            LEFT JOIN wifi_info wi on wi.wid = a.wid
+            where
+                a.wid = #{wid}
+                and substring(a.deal_date, 1,4) = #{year}
+            GROUP BY mac,wid,deal_date
+        ) a
+        GROUP BY deal_date
+    </select>
+
 </mapper>

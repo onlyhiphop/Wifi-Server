@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wifi.server.module.dao.WifiInfoDao">
+
+    <sql id="columns">
+        a.id AS "id",
+        a.wid AS "wid",
+        a.place_name AS "placeName"
+    </sql>
+
+    <sql id="joins">
+    </sql>
+
+    <select id="findList" resultType="WifiInfo">
+        select
+        <include refid="columns"></include>
+        from wifi_info a
+        <include refid="joins"></include>
+        <where>
+            <if test="id != null and id != ''">
+                a.id = #{id}
+            </if>
+            <if test="wid != null and wid !=''">
+                and a.wid = #{wid}
+            </if>
+            <if test="placeName != null and placeName != ''">
+                and a.place_name = #{placeName}
+            </if>
+        </where>
+    </select>
+
+</mapper>

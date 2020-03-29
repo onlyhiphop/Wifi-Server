@@ -8,6 +8,7 @@ import com.wifi.server.module.entity.*;
 import com.wifi.server.module.server.MacDsNightService;
 import com.wifi.server.module.server.MacStayCountService;
 import com.wifi.server.module.server.MacStayTimeService;
+import com.wifi.server.module.server.WifiInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,9 @@ public class DataShowController {
     private MacStayTimeService stayTimeService;
     @Autowired
     private MacDsNightService macDsNightService;
+    @Autowired
+    private WifiInfoService wifiInfoService;
+
 
     /**
      * 查询行为轨迹
@@ -202,23 +206,42 @@ public class DataShowController {
     }
 
     /**
+     * 查询地点表数据
+     */
+    @RequestMapping(value = "/place")
+    public AjaxResult place(){
+        List<WifiInfo> infoList = wifiInfoService.findList(new WifiInfo());
+        return AjaxResult.success(infoList);
+    }
+
+    /**
      * 各月数据对比
      * @param searchCondition
      * @return
      */
     @RequestMapping(value = "/allMonth")
     public AjaxResult allMonth(SearchCondition searchCondition){
+        String wid = searchCondition.getWid();
         String year = searchCondition.getYear();
         String sid = searchCondition.getSid();
         //次数
-        List<MacStayCount> yearCountList = countService.findYearList(sid, year);
-        Map<String, List<String>> countMonthMapList = MyUtil.getCountMonthMapList(yearCountList);
+        List<MacStayCount> yearCountList = countService.findYearList(sid, year, wid);
+        List<String> countMonthData = MyUtil.getCountMonthData(yearCountList, "0");
 
         //时间
-        List<MacStayTime> yearTimeList = stayTimeService.findYearList(sid,year);
-        Map<String, List<String>> timeMonthMapList = MyUtil.getTimeMonthMapList(yearTimeList);
+        List<MacStayTime> yearTimeList = stayTimeService.findYearList(sid,year, wid);
+        List<String> timeMonthData = MyUtil.getTimeMonthData(yearTimeList, "0");
 
-        Dict result = Dict.create().set("count", countMonthMapList).set("time", timeMonthMapList);
+        //次数班级平均值
+        List<MacStayCount> yearCountAverageList = countService.findWidYearAverage(sid, year, wid);
+        List<String> countAverageMonthData = MyUtil.getCountMonthData(yearCountAverageList, "1");
+
+        //时间班级平均值
+        List<MacStayTime> yearTimeAverageList = stayTimeService.findWidYearAverage(sid, year, wid);
+        List<String> yearTimeAverageMonthData = MyUtil.getTimeMonthData(yearTimeAverageList, "1");
+
+        Dict result = Dict.create().set("count", countMonthData).set("time", timeMonthData)
+                .set("countAverage", countAverageMonthData).set("timeAverage", yearTimeAverageMonthData);
         return AjaxResult.success(result);
     }
 }

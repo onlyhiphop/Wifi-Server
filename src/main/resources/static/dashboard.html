@@ -43,6 +43,9 @@
 			padding-right: 15px;
     		padding-left: 15px;
 		}
+		.layui-form-select dl dd.layui-this{
+			background-color: #ab47bc;
+		}
 	</style>
 </head>
 
@@ -428,15 +431,26 @@
 								<div class="card-content">
 									<div class="row">
 										<div class="formSearchClass">
-											<form id="allMonthForm" class="navbar-form navbar-left" style="margin-top: -20px;margin-bottom: 0px;" role="search">
+											<form id="allMonthForm" class="navbar-form navbar-left layui-form" style="margin-top: -20px;margin-bottom: 0px;" role="search">
 												<div class="form-group  is-empty">
-													学号：
-													<input name="sid" type="text" class="form-control required" placeholder="请输入学生学号...">
+													<label class="layui-form-label">学号</label>
+													<div class="layui-input-inline">
+														<input name="sid" type="text" class="form-control required" placeholder="请输入学生学号...">
+													</div>
 													<span class="material-input"></span>
 												</div>
+												<div class="form-group is-empty" >
+													<label class="layui-form-label">地点</label>
+													<div class="layui-input-inline">
+														<select name="wid" lay-verify="required" lay-filter="place" lay-search>
+														</select>
+													</div>
+												</div>
 												<div class="form-group  is-empty">
-													年份：
-													<input type="text" readonly name="year" id="date3" lay-verify="date3" class="form-control" placeholder="请输入年份...">
+													<label class="layui-form-label">年份</label>
+													<div class="layui-input-inline">
+														<input type="text" readonly name="year" id="date3" lay-verify="date3" class="form-control" placeholder="请输入年份...">
+													</div>
 													<span class="material-input"></span>
 												</div>
 												<button type="button" data-form="allMonthForm" onclick="formSubmitFunc(this);" class="btn btn-white btn-round btn-just-icon">
@@ -704,6 +718,7 @@
 
 			}else if(formId == 'allMonthForm'){  //各月数据对比
 				url = "/api/allMonth";
+                data = $('#allMonthForm').serialize();
 				var year = $('#allMonthForm').find('input[name=year]').val();
 				if(!year){
 					layer.msg("缺少年份", {icon: 2});
@@ -742,9 +757,10 @@
 		});
 	</script>
 	<script>
-		layui.use(['laydate', 'layer'], function() {
+		layui.use(['laydate', 'layer', 'form'], function() {
 			var laydate = layui.laydate
-			,layer = layui.layer;
+				,layer = layui.layer
+				,form = layui.form;
 
 			//行为轨迹
 			laydate.render({
@@ -792,6 +808,21 @@
 				}
 			});
 
+		//	查询地点
+			$.get('/api/place', function (res) {
+				if (res.code == '200'){
+				    var data = res.data;
+				    data.forEach(function (item) {
+                        var value = item.wid;
+                        var label = item.placeName;
+                        var text = '<option value="' + value + '">' + label + '</option>';
+                        $(':input[name=wid]').append(text);
+                    });
+				    form.render('select');
+				}else{
+				    layer.msg("获取地点失败", {icon: 2})
+				}
+            }, 'json')
 		})
 	</script>
 </html>

@@ -1,6 +1,5 @@
 package com.wifi.server.module.dao;
 
-import com.wifi.server.module.entity.MacStayCount;
 import com.wifi.server.module.entity.MacStayTime;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,6 +22,10 @@ public interface MacStayTimeDao {
     /**
      * 查询某年各月数据
      */
-    List<MacStayTime> findYearList(@Param("studentId")String studentId,@Param("year")String year);
+    List<MacStayTime> findYearList(@Param("studentId")String studentId,@Param("year")String year, @Param("wid")String wid);
 
+    /**
+     * 查询某年某地点各月的平均值
+     */
+    List<MacStayTime> findWidYearAverage(@Param("studentId")String studentId,@Param("year")String year,@Param("wid")String wid);
 }

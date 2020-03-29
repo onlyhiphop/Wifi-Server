@@ -12,4 +12,5 @@ public class SearchCondition {
     private String date;
     private String year;
     private String month;
+    private String wid;
 }
