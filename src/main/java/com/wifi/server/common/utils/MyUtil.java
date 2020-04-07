@@ -49,9 +49,9 @@ public class MyUtil {
         for (MacStayCount count :
                 lists) {
             if("0".equals(flag)){
-                sortMonth[Integer.parseInt(count.getMonth())] = count.getComeCount();
+                sortMonth[Integer.parseInt(count.getMonth()) - 1] = count.getComeCount();
             }else if("1".equals(flag)){
-                sortMonth[Integer.parseInt(count.getMonth())] = count.getAverage();
+                sortMonth[Integer.parseInt(count.getMonth()) - 1] = count.getAverage();
             }
         }
         return CollUtil.newArrayList(sortMonth);
@@ -65,9 +65,9 @@ public class MyUtil {
         for (MacStayTime t :
                 lists) {
             if("0".equals(flag)){
-                sortMonth[Integer.parseInt(t.getMonth())] = t.getStayDuration();
+                sortMonth[Integer.parseInt(t.getMonth()) - 1] = t.getStayDuration();
             }else if("1".equals(flag)){
-                sortMonth[Integer.parseInt(t.getMonth())] = t.getAverage();
+                sortMonth[Integer.parseInt(t.getMonth()) - 1] = t.getAverage();
             }
 
         }

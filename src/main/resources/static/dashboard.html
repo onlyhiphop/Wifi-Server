@@ -81,24 +81,18 @@
 	                        <p>实时数据处理</p>
 	                    </a>
 	                </li>
-	                <li>
-	                    <a href="table.html">
-	                        <i class="material-icons">settings_system_daydream</i>
-	                        <p>系统监控</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="typography.html">
-	                        <i class="material-icons">settings_input_antenna</i>
-	                        <p>探针设置</p>
-	                    </a>
-	                </li>
-					<li class="active-pro">
-	                    <a href="upgrade.html">
-	                        <i class="material-icons">unarchive</i>
-	                        <p>Upgrade to PRO</p>
-	                    </a>
-	                </li>
+	                <!--<li>-->
+	                    <!--<a href="table.html">-->
+	                        <!--<i class="material-icons">settings_system_daydream</i>-->
+	                        <!--<p>系统监控</p>-->
+	                    <!--</a>-->
+	                <!--</li>-->
+	                <!--<li>-->
+	                    <!--<a href="typography.html">-->
+	                        <!--<i class="material-icons">settings_input_antenna</i>-->
+	                        <!--<p>探针设置</p>-->
+	                    <!--</a>-->
+	                <!--</li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -546,7 +540,7 @@
 				var width = $('#timePieChartDiv').parent().width();
 				var height = $('#timePieChartDiv').parent().height();
 
-				var pieElement = pervDraw("timePieChartDiv");
+				var pieElement = pervDraw("timePieChartDiv", width, height);
 				var barElement = pervDraw("timeBarChartDiv", width, height);
 				var twoBarElement = pervDraw("timeTowBarChartDiv", width, height);
 
@@ -649,13 +643,13 @@
 						console.log(towTimeData2);
 						//时间图
 						drawChart.initPie(pieElement, timePieData, '时间统计');
-						drawChart.initBar(barElement, [countXArr, countYArr], "时间/分");
-						drawChart.initTowBar(twoBarElement, twoData2,2);
+						drawChart.initBar(barElement, [timeXArr, timeYArr], "时间/分");
+						drawChart.initTowBar(twoBarElement, towTimeData2,2);
 
 						//次数图
 						drawChart.initPie(pieElement2,countPieData, '次数统计');
-						drawChart.initBar(barElement2, [timeXArr, timeYArr], "次数");
-						drawChart.initTowBar(twoBarElement2, towTimeData2,2);
+						drawChart.initBar(barElement2, [countXArr, countYArr], "次数");
+						drawChart.initTowBar(twoBarElement2, twoData2,2);
 					}
 				})
 
