@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -26,7 +27,7 @@ public class DataCollectionController {
 
     @RequestMapping(value = "/collection", method = RequestMethod.POST)
     @ResponseBody
-    public String collection(@RequestParam(value = "data", required = false) String data) throws JsonProcessingException {
+    public String collection(@RequestParam(value = "data", required = false) String data) throws IOException {
 
         HashMap map = MAPPER.readValue(data, HashMap.class);
         String wid = (String) map.get("id");
